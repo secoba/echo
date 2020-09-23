@@ -592,7 +592,9 @@ func (e *Echo) Reverse(name string, params ...interface{}) string {
 func (e *Echo) Routes() []*Route {
 	routes := make([]*Route, 0, len(e.router.routes))
 	for _, v := range e.router.routes {
-		routes = append(routes, v)
+		if v.Desc != "-" { // ignore - route
+			routes = append(routes, v)
+		}
 	}
 	return routes
 }
