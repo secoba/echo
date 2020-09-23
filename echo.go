@@ -542,14 +542,14 @@ func (e *Echo) Add(method, path string, handler HandlerFunc, desc string, middle
 func (e *Echo) Host(name, desc string, m ...MiddlewareFunc) (g *Group) {
 	e.routers[name] = NewRouter(e)
 	g = &Group{host: name, echo: e}
-	g.Use(desc, m...)
+	g.Use(m...)
 	return
 }
 
 // Group creates a new router group with prefix and optional group-level middleware.
-func (e *Echo) Group(prefix, desc string, m ...MiddlewareFunc) (g *Group) {
+func (e *Echo) Group(prefix string, m ...MiddlewareFunc) (g *Group) {
 	g = &Group{prefix: prefix, echo: e}
-	g.Use(desc, m...)
+	g.Use(m...)
 	return
 }
 

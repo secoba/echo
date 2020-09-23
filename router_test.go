@@ -576,7 +576,7 @@ func TestRouterParamStaticConflict(t *testing.T) {
 		return nil
 	}
 
-	g := e.Group("/g", "")
+	g := e.Group("/g")
 	g.GET("/skills", "", handler)
 	g.GET("/status", "", handler)
 	g.GET("/:name", "", handler)

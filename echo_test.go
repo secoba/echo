@@ -281,7 +281,7 @@ func TestEchoURL(t *testing.T) {
 
 	e.GET("/static/file", "", static)
 	e.GET("/users/:id", "", getUser)
-	g := e.Group("/group", "")
+	g := e.Group("/group")
 	g.GET("/users/:uid/files/:fid", "", getFile)
 
 	assert := assert.New(t)
@@ -354,8 +354,8 @@ func TestEchoGroup(t *testing.T) {
 	e.GET("/users", "", h)
 
 	// Group
-	g1 := e.Group("/group1", "")
-	g1.Use("", func(next HandlerFunc) HandlerFunc {
+	g1 := e.Group("/group1")
+	g1.Use(func(next HandlerFunc) HandlerFunc {
 		return func(c Context) error {
 			buf.WriteString("1")
 			return next(c)
@@ -364,15 +364,15 @@ func TestEchoGroup(t *testing.T) {
 	g1.GET("", "", h)
 
 	// Nested groups with middleware
-	g2 := e.Group("/group2", "")
-	g2.Use("", func(next HandlerFunc) HandlerFunc {
+	g2 := e.Group("/group2")
+	g2.Use(func(next HandlerFunc) HandlerFunc {
 		return func(c Context) error {
 			buf.WriteString("2")
 			return next(c)
 		}
 	})
 	g3 := g2.Group("/group3")
-	g3.Use("", func(next HandlerFunc) HandlerFunc {
+	g3.Use(func(next HandlerFunc) HandlerFunc {
 		return func(c Context) error {
 			buf.WriteString("3")
 			return next(c)

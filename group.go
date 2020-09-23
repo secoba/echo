@@ -18,15 +18,15 @@ type (
 )
 
 // Use implements `Echo#Use()` for sub-routes within the Group.
-func (g *Group) Use(desc string, middleware ...MiddlewareFunc) {
+func (g *Group) Use(middleware ...MiddlewareFunc) {
 	g.middleware = append(g.middleware, middleware...)
 	if len(g.middleware) == 0 {
 		return
 	}
 	// Allow all requests to reach the group as they might get dropped if router
 	// doesn't find a match, making none of the group middleware process.
-	g.Any("", desc, NotFoundHandler)
-	g.Any("/*", desc, NotFoundHandler)
+	g.Any("", "-", NotFoundHandler)
+	g.Any("/*", "-", NotFoundHandler)
 }
 
 // CONNECT implements `Echo#CONNECT()` for sub-routes within the Group.
@@ -93,11 +93,11 @@ func (g *Group) Match(methods []string, path, desc string, handler HandlerFunc, 
 }
 
 // Group creates a new sub-group with prefix and optional sub-group-level middleware.
-func (g *Group) Group(prefix, desc string, middleware ...MiddlewareFunc) (sg *Group) {
+func (g *Group) Group(prefix string, middleware ...MiddlewareFunc) (sg *Group) {
 	m := make([]MiddlewareFunc, 0, len(g.middleware)+len(middleware))
 	m = append(m, g.middleware...)
 	m = append(m, middleware...)
-	sg = g.echo.Group(g.prefix+prefix, desc, m...)
+	sg = g.echo.Group(g.prefix+prefix, m...)
 	sg.host = g.host
 	return
 }

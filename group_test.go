@@ -11,7 +11,7 @@ import (
 
 // TODO: Fix me
 func TestGroup(t *testing.T) {
-	g := New().Group("/group", "")
+	g := New().Group("/group")
 	h := func(Context) error { return nil }
 	g.CONNECT("/", "", h)
 	g.DELETE("/", "",h)
@@ -30,7 +30,7 @@ func TestGroup(t *testing.T) {
 
 func TestGroupFile(t *testing.T) {
 	e := New()
-	g := e.Group("/group", "")
+	g := e.Group("/group")
 	g.File("/walle", "_fixture/images/walle.png", "")
 	expectedData, err := ioutil.ReadFile("_fixture/images/walle.png")
 	assert.Nil(t, err)
@@ -44,7 +44,7 @@ func TestGroupFile(t *testing.T) {
 func TestGroupRouteMiddleware(t *testing.T) {
 	// Ensure middleware slices are not re-used
 	e := New()
-	g := e.Group("/group", "")
+	g := e.Group("/group")
 	h := func(Context) error { return nil }
 	m1 := func(next HandlerFunc) HandlerFunc {
 		return func(c Context) error {
@@ -71,7 +71,7 @@ func TestGroupRouteMiddleware(t *testing.T) {
 			return c.NoContent(405)
 		}
 	}
-	g.Use("", m1, m2, m3)
+	g.Use(m1, m2, m3)
 	g.GET("/404", "", h, m4)
 	g.GET("/405", "", h, m5)
 
@@ -84,7 +84,7 @@ func TestGroupRouteMiddleware(t *testing.T) {
 func TestGroupRouteMiddlewareWithMatchAny(t *testing.T) {
 	// Ensure middleware and match any routes do not conflict
 	e := New()
-	g := e.Group("/group", "")
+	g := e.Group("/group")
 	m1 := func(next HandlerFunc) HandlerFunc {
 		return func(c Context) error {
 			return next(c)
@@ -98,7 +98,7 @@ func TestGroupRouteMiddlewareWithMatchAny(t *testing.T) {
 	h := func(c Context) error {
 		return c.String(http.StatusOK, c.Path())
 	}
-	g.Use("", m1)
+	g.Use(m1)
 	g.GET("/help", "", h, m2)
 	g.GET("/*", "", h, m2)
 	g.GET("", "", h, m2)
