@@ -96,10 +96,24 @@ type (
 
 	// Route contains a handler and information for matching against requests.
 	Route struct {
-		Method string `json:"method"`
-		Path   string `json:"path"`
-		Name   string `json:"name"`
-		Desc   string `json:"desc"`
+		Method    string `json:"method"`
+		Path      string `json:"path"`
+		Name      string `json:"name"`
+		ApiDesc   string `json:"desc"`
+		GroupDesc string `json:"group"`
+	}
+
+	//GroupRoute struct {
+	//	//Path  string `json:"path"`
+	//	Name  string `json:"name"`
+	//	Child []GroupChild
+	//}
+
+	GroupChild struct {
+		Method  string `json:"method"`
+		Path    string `json:"path"`
+		Name    string `json:"name"`
+		ApiDesc string `json:"desc"`
 	}
 
 	// HTTPError represents an error that occurred while handling a request.
@@ -395,55 +409,55 @@ func (e *Echo) Use(middleware ...MiddlewareFunc) {
 // CONNECT registers a new CONNECT route for a path with matching handler in the
 // router with optional route-level middleware.
 func (e *Echo) CONNECT(path, desc string, h HandlerFunc, m ...MiddlewareFunc) *Route {
-	return e.Add(http.MethodConnect, path, h, desc, m...)
+	return e.Add(http.MethodConnect, path, h, "", desc, m...)
 }
 
 // DELETE registers a new DELETE route for a path with matching handler in the router
 // with optional route-level middleware.
 func (e *Echo) DELETE(path, desc string, h HandlerFunc, m ...MiddlewareFunc) *Route {
-	return e.Add(http.MethodDelete, path, h, desc, m...)
+	return e.Add(http.MethodDelete, path, h, "", desc, m...)
 }
 
 // GET registers a new GET route for a path with matching handler in the router
 // with optional route-level middleware.
 func (e *Echo) GET(path, desc string, h HandlerFunc, m ...MiddlewareFunc) *Route {
-	return e.Add(http.MethodGet, path, h, desc, m...)
+	return e.Add(http.MethodGet, path, h, "", desc, m...)
 }
 
 // HEAD registers a new HEAD route for a path with matching handler in the
 // router with optional route-level middleware.
 func (e *Echo) HEAD(path, desc string, h HandlerFunc, m ...MiddlewareFunc) *Route {
-	return e.Add(http.MethodHead, path, h, desc, m...)
+	return e.Add(http.MethodHead, path, h, "", desc, m...)
 }
 
 // OPTIONS registers a new OPTIONS route for a path with matching handler in the
 // router with optional route-level middleware.
 func (e *Echo) OPTIONS(path, desc string, h HandlerFunc, m ...MiddlewareFunc) *Route {
-	return e.Add(http.MethodOptions, path, h, desc, m...)
+	return e.Add(http.MethodOptions, path, h, "", desc, m...)
 }
 
 // PATCH registers a new PATCH route for a path with matching handler in the
 // router with optional route-level middleware.
 func (e *Echo) PATCH(path, desc string, h HandlerFunc, m ...MiddlewareFunc) *Route {
-	return e.Add(http.MethodPatch, path, h, desc, m...)
+	return e.Add(http.MethodPatch, path, h, "", desc, m...)
 }
 
 // POST registers a new POST route for a path with matching handler in the
 // router with optional route-level middleware.
 func (e *Echo) POST(path, desc string, h HandlerFunc, m ...MiddlewareFunc) *Route {
-	return e.Add(http.MethodPost, path, h, desc, m...)
+	return e.Add(http.MethodPost, path, h, "", desc, m...)
 }
 
 // PUT registers a new PUT route for a path with matching handler in the
 // router with optional route-level middleware.
 func (e *Echo) PUT(path, desc string, h HandlerFunc, m ...MiddlewareFunc) *Route {
-	return e.Add(http.MethodPut, path, h, desc, m...)
+	return e.Add(http.MethodPut, path, h, "", desc, m...)
 }
 
 // TRACE registers a new TRACE route for a path with matching handler in the
 // router with optional route-level middleware.
 func (e *Echo) TRACE(path, desc string, h HandlerFunc, m ...MiddlewareFunc) *Route {
-	return e.Add(http.MethodTrace, path, h, desc, m...)
+	return e.Add(http.MethodTrace, path, h, "", desc, m...)
 }
 
 // Any registers a new route for all HTTP methods and path with matching handler
@@ -451,7 +465,7 @@ func (e *Echo) TRACE(path, desc string, h HandlerFunc, m ...MiddlewareFunc) *Rou
 func (e *Echo) Any(path, desc string, handler HandlerFunc, middleware ...MiddlewareFunc) []*Route {
 	routes := make([]*Route, len(methods))
 	for i, m := range methods {
-		routes[i] = e.Add(m, path, handler, desc, middleware...)
+		routes[i] = e.Add(m, path, handler, "", desc, middleware...)
 	}
 	return routes
 }
@@ -461,7 +475,7 @@ func (e *Echo) Any(path, desc string, handler HandlerFunc, middleware ...Middlew
 func (e *Echo) Match(methods []string, path, desc string, handler HandlerFunc, middleware ...MiddlewareFunc) []*Route {
 	routes := make([]*Route, len(methods))
 	for i, m := range methods {
-		routes[i] = e.Add(m, path, handler, desc, middleware...)
+		routes[i] = e.Add(m, path, handler, "", desc, middleware...)
 	}
 	return routes
 }
@@ -515,7 +529,7 @@ func (e *Echo) File(path, file, desc string, m ...MiddlewareFunc) *Route {
 	return e.file(path, file, desc, e.GET, m...)
 }
 
-func (e *Echo) add(host, method, path string, handler HandlerFunc, desc string, middleware ...MiddlewareFunc) *Route {
+func (e *Echo) add(host, method, path string, handler HandlerFunc, groupDesc, apiDesc string, middleware ...MiddlewareFunc) *Route {
 	name := handlerName(handler)
 	router := e.findRouter(host)
 	router.Add(method, path, func(c Context) error {
@@ -523,10 +537,11 @@ func (e *Echo) add(host, method, path string, handler HandlerFunc, desc string, 
 		return h(c)
 	})
 	r := &Route{
-		Method: method,
-		Path:   path,
-		Name:   name,
-		Desc:   desc,
+		Method:    method,
+		Path:      path,
+		Name:      name,
+		ApiDesc:   apiDesc,
+		GroupDesc: groupDesc,
 	}
 	e.router.routes[method+path] = r
 	return r
@@ -534,8 +549,8 @@ func (e *Echo) add(host, method, path string, handler HandlerFunc, desc string, 
 
 // Add registers a new route for an HTTP method and path with matching handler
 // in the router with optional route-level middleware.
-func (e *Echo) Add(method, path string, handler HandlerFunc, desc string, middleware ...MiddlewareFunc) *Route {
-	return e.add("", method, path, handler, desc, middleware...)
+func (e *Echo) Add(method, path string, handler HandlerFunc, groupDesc, apiDesc string, middleware ...MiddlewareFunc) *Route {
+	return e.add("", method, path, handler, groupDesc, apiDesc, middleware...)
 }
 
 // Host creates a new router group for the provided host and optional host-level middleware.
@@ -547,8 +562,8 @@ func (e *Echo) Host(name, desc string, m ...MiddlewareFunc) (g *Group) {
 }
 
 // Group creates a new router group with prefix and optional group-level middleware.
-func (e *Echo) Group(prefix string, m ...MiddlewareFunc) (g *Group) {
-	g = &Group{prefix: prefix, echo: e}
+func (e *Echo) Group(prefix, desc string, m ...MiddlewareFunc) (g *Group) {
+	g = &Group{prefix: prefix, echo: e, desc: desc}
 	g.Use(m...)
 	return
 }
@@ -589,11 +604,39 @@ func (e *Echo) Reverse(name string, params ...interface{}) string {
 }
 
 // Routes returns the registered routes.
-func (e *Echo) Routes() []*Route {
-	routes := make([]*Route, 0, len(e.router.routes))
+func (e *Echo) Routes() []*GroupChild {
+	routes := make([]*GroupChild, 0)
 	for _, v := range e.router.routes {
-		if v.Desc != "-" { // ignore - route
-			routes = append(routes, v)
+		if v.ApiDesc != "-" { // ignore - route
+			routes = append(routes,
+				&GroupChild{
+					Method:  v.Method,
+					Path:    v.Path,
+					Name:    v.Name,
+					ApiDesc: v.ApiDesc,
+				})
+		}
+	}
+	return routes
+}
+
+func (e *Echo) RoutesGroup() map[string][]*GroupChild {
+	routes := make(map[string][]*GroupChild, 0)
+	for _, v := range e.router.routes {
+		if v.ApiDesc != "-" { // ignore - route
+			child := &GroupChild{
+				Method:  v.Method,
+				Path:    v.Path,
+				Name:    v.Name,
+				ApiDesc: v.ApiDesc,
+			}
+			if _, ok := routes[v.GroupDesc]; ok {
+				routes[v.GroupDesc] = append(routes[v.GroupDesc], child)
+			} else {
+				groupChild := make([]*GroupChild, 0)
+				groupChild = append(groupChild, child)
+				routes[v.GroupDesc] = groupChild
+			}
 		}
 	}
 	return routes
