@@ -14,8 +14,6 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
-
-	clone "github.com/huandu/go-clone/generic"
 )
 
 type (
@@ -231,7 +229,15 @@ func (c *context) writeContentType(value string) {
 
 // Copy 复制Context
 func (c *context) Copy() *context {
-	return clone.Clone(c)
+	//New().NewContext(c.request, c.response.Writer)
+	return &context{
+		request:  c.request,
+		response: NewResponse(c.response, c.echo),
+		store:    make(Map),
+		echo:     c.echo,
+		pvalues:  make([]string, *c.echo.maxParam),
+		handler:  NotFoundHandler,
+	}
 }
 
 func (c *context) Request() *http.Request {

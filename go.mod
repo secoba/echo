@@ -1,6 +1,6 @@
 module github.com/secoba/echo
 
-go 1.18
+go 1.15
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -13,13 +13,7 @@ require (
 )
 
 require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/huandu/go-clone v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.7 // indirect
-	github.com/mattn/go-isatty v0.0.12 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	golang.org/x/sys v0.0.0-20200826173525-f9321e4c35a6 // indirect
 	golang.org/x/text v0.3.3 // indirect
-	gopkg.in/yaml.v2 v2.2.2 // indirect
 )

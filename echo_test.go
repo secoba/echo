@@ -64,7 +64,7 @@ func TestEchoStatic(t *testing.T) {
 	assert := assert.New(t)
 
 	// OK
-	e.Static("/images",  "_fixture/images", "")
+	e.Static("/images", "_fixture/images", "")
 	c, b := request(http.MethodGet, "/images/walle.png", e)
 	assert.Equal(http.StatusOK, c)
 	assert.NotEmpty(b)
@@ -159,7 +159,7 @@ func TestEchoMiddlewareError(t *testing.T) {
 			return errors.New("error")
 		}
 	})
-	e.GET("/","", NotFoundHandler)
+	e.GET("/", "", NotFoundHandler)
 	c, _ := request(http.MethodGet, "/", e)
 	assert.Equal(t, http.StatusInternalServerError, c)
 }
@@ -168,7 +168,7 @@ func TestEchoHandler(t *testing.T) {
 	e := New()
 
 	// HandlerFunc
-	e.GET("/ok","", func(c Context) error {
+	e.GET("/ok", "", func(c Context) error {
 		return c.String(http.StatusOK, "OK")
 	})
 
@@ -281,7 +281,7 @@ func TestEchoURL(t *testing.T) {
 
 	e.GET("/static/file", "", static)
 	e.GET("/users/:id", "", getUser)
-	g := e.Group("/group")
+	g := e.Group("/group", "")
 	g.GET("/users/:uid/files/:fid", "", getFile)
 
 	assert := assert.New(t)
@@ -296,15 +296,15 @@ func TestEchoURL(t *testing.T) {
 func TestEchoRoutes(t *testing.T) {
 	e := New()
 	routes := []*Route{
-		{http.MethodGet, "/users/:user/events", "", ""},
-		{http.MethodGet, "/users/:user/events/public", "", ""},
-		{http.MethodPost, "/repos/:owner/:repo/git/refs", "", ""},
-		{http.MethodPost, "/repos/:owner/:repo/git/tags", "", ""},
+		{http.MethodGet, "/users/:user/events", "", "", ""},
+		{http.MethodGet, "/users/:user/events/public", "", "", ""},
+		{http.MethodPost, "/repos/:owner/:repo/git/refs", "", "", ""},
+		{http.MethodPost, "/repos/:owner/:repo/git/tags", "", "", ""},
 	}
 	for _, r := range routes {
 		e.Add(r.Method, r.Path, func(c Context) error {
 			return c.String(http.StatusOK, "OK")
-		}, "")
+		}, "", "")
 	}
 
 	if assert.Equal(t, len(routes), len(e.Routes())) {
@@ -354,7 +354,7 @@ func TestEchoGroup(t *testing.T) {
 	e.GET("/users", "", h)
 
 	// Group
-	g1 := e.Group("/group1")
+	g1 := e.Group("/group1", "")
 	g1.Use(func(next HandlerFunc) HandlerFunc {
 		return func(c Context) error {
 			buf.WriteString("1")
@@ -364,14 +364,14 @@ func TestEchoGroup(t *testing.T) {
 	g1.GET("", "", h)
 
 	// Nested groups with middleware
-	g2 := e.Group("/group2")
+	g2 := e.Group("/group2", "")
 	g2.Use(func(next HandlerFunc) HandlerFunc {
 		return func(c Context) error {
 			buf.WriteString("2")
 			return next(c)
 		}
 	})
-	g3 := g2.Group("/group3")
+	g3 := g2.Group("/group3", "")
 	g3.Use(func(next HandlerFunc) HandlerFunc {
 		return func(c Context) error {
 			buf.WriteString("3")

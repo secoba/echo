@@ -25,6 +25,7 @@ func main() {
 		return context.JSON(http.StatusOK, e.Routes())
 	})
 	g.GET("/group", "", func(context echo.Context) error {
+		fmt.Println(context.Copy())
 		return context.JSON(http.StatusOK, e.RoutesGroup())
 	})
 	if err := e.Start(fmt.Sprintf(":%d", 18081)); err != nil {

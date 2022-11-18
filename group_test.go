@@ -11,26 +11,26 @@ import (
 
 // TODO: Fix me
 func TestGroup(t *testing.T) {
-	g := New().Group("/group")
+	g := New().Group("/group", "")
 	h := func(Context) error { return nil }
 	g.CONNECT("/", "", h)
-	g.DELETE("/", "",h)
-	g.GET("/", "",h)
-	g.HEAD("/","", h)
-	g.OPTIONS("/","", h)
-	g.PATCH("/","", h)
-	g.POST("/","", h)
-	g.PUT("/", "",h)
-	g.TRACE("/","", h)
-	g.Any("/", "",h)
-	g.Match([]string{http.MethodGet, http.MethodPost}, "/","", h)
-	g.Static("/static", "/tmp","")
+	g.DELETE("/", "", h)
+	g.GET("/", "", h)
+	g.HEAD("/", "", h)
+	g.OPTIONS("/", "", h)
+	g.PATCH("/", "", h)
+	g.POST("/", "", h)
+	g.PUT("/", "", h)
+	g.TRACE("/", "", h)
+	g.Any("/", "", h)
+	g.Match([]string{http.MethodGet, http.MethodPost}, "/", "", h)
+	g.Static("/static", "/tmp", "")
 	g.File("/walle", "_fixture/images//walle.png", "")
 }
 
 func TestGroupFile(t *testing.T) {
 	e := New()
-	g := e.Group("/group")
+	g := e.Group("/group", "")
 	g.File("/walle", "_fixture/images/walle.png", "")
 	expectedData, err := ioutil.ReadFile("_fixture/images/walle.png")
 	assert.Nil(t, err)
@@ -44,7 +44,7 @@ func TestGroupFile(t *testing.T) {
 func TestGroupRouteMiddleware(t *testing.T) {
 	// Ensure middleware slices are not re-used
 	e := New()
-	g := e.Group("/group")
+	g := e.Group("/group", "")
 	h := func(Context) error { return nil }
 	m1 := func(next HandlerFunc) HandlerFunc {
 		return func(c Context) error {
@@ -84,7 +84,7 @@ func TestGroupRouteMiddleware(t *testing.T) {
 func TestGroupRouteMiddlewareWithMatchAny(t *testing.T) {
 	// Ensure middleware and match any routes do not conflict
 	e := New()
-	g := e.Group("/group")
+	g := e.Group("/group", "")
 	m1 := func(next HandlerFunc) HandlerFunc {
 		return func(c Context) error {
 			return next(c)
