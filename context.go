@@ -14,12 +14,17 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+
+	clone "github.com/huandu/go-clone/generic"
 )
 
 type (
 	// Context represents the context of the current HTTP request. It holds request and
 	// response objects, path, path parameters, data and registered handler.
 	Context interface {
+		// Copy Context
+		Copy() *context
+
 		// Request returns `*http.Request`.
 		Request() *http.Request
 
@@ -222,6 +227,11 @@ func (c *context) writeContentType(value string) {
 	if header.Get(HeaderContentType) == "" {
 		header.Set(HeaderContentType, value)
 	}
+}
+
+// Copy 复制Context
+func (c *context) Copy() *context {
+	return clone.Clone(c)
 }
 
 func (c *context) Request() *http.Request {
