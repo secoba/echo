@@ -109,15 +109,15 @@ var (
 //
 // See: https://jwt.io/introduction
 // See `JWTConfig.TokenLookup`
-func JWT(key interface{}) echo.MiddlewareFunc {
+func MiddlewareJWT(key interface{}) echo.MiddlewareFunc {
 	c := DefaultJWTConfig
 	c.SigningKey = key
-	return JWTWithConfig(c)
+	return MiddlewareJWTWithConfig(c)
 }
 
 // JWTWithConfig returns a JWT auth middleware with config.
 // See: `JWT()`.
-func JWTWithConfig(config JWTConfig) echo.MiddlewareFunc {
+func MiddlewareJWTWithConfig(config JWTConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultJWTConfig.Skipper

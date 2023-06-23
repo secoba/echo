@@ -59,13 +59,13 @@ var (
 
 // CORS returns a Cross-Origin Resource Sharing (CORS) middleware.
 // See: https://developer.mozilla.org/en/docs/Web/HTTP/Access_control_CORS
-func CORS() echo.MiddlewareFunc {
-	return CORSWithConfig(DefaultCORSConfig)
+func MiddlewareCORS() echo.MiddlewareFunc {
+	return MiddlewareCORSWithConfig(DefaultCORSConfig)
 }
 
 // CORSWithConfig returns a CORS middleware with config.
 // See: `CORS()`.
-func CORSWithConfig(config CORSConfig) echo.MiddlewareFunc {
+func MiddlewareCORSWithConfig(config CORSConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultCORSConfig.Skipper

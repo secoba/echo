@@ -10,10 +10,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-//Assert expected with url.EscapedPath method to obtain the path.
+// Assert expected with url.EscapedPath method to obtain the path.
 func TestRewrite(t *testing.T) {
 	e := echo.New()
-	e.Use(RewriteWithConfig(RewriteConfig{
+	e.Use(MiddlewareRewriteWithConfig(RewriteConfig{
 		Rules: map[string]string{
 			"/old":              "/new",
 			"/api/*":            "/$1",
@@ -58,7 +58,7 @@ func TestEchoRewritePreMiddleware(t *testing.T) {
 	r := e.Router()
 
 	// Rewrite old url to new one
-	e.Pre(RewriteWithConfig(RewriteConfig{
+	e.Pre(MiddlewareRewriteWithConfig(RewriteConfig{
 		Rules: map[string]string{
 			"/old": "/new",
 		},
@@ -81,7 +81,7 @@ func TestRewriteWithConfigPreMiddleware_Issue1143(t *testing.T) {
 	e := echo.New()
 	r := e.Router()
 
-	e.Pre(RewriteWithConfig(RewriteConfig{
+	e.Pre(MiddlewareRewriteWithConfig(RewriteConfig{
 		Rules: map[string]string{
 			"/api/*/mgmt/proj/*/agt": "/api/$1/hosts/$2",
 			"/api/*/mgmt/proj":       "/api/$1/eng",
@@ -112,7 +112,7 @@ func TestRewriteWithConfigPreMiddleware_Issue1143(t *testing.T) {
 func TestEchoRewriteWithCaret(t *testing.T) {
 	e := echo.New()
 
-	e.Pre(RewriteWithConfig(RewriteConfig{
+	e.Pre(MiddlewareRewriteWithConfig(RewriteConfig{
 		Rules: map[string]string{
 			"^/abc/*": "/v1/abc/$1",
 		},

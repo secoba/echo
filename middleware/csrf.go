@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/secoba/echo"
 	"github.com/labstack/gommon/random"
+	"github.com/secoba/echo"
 )
 
 type (
@@ -78,14 +78,14 @@ var (
 
 // CSRF returns a Cross-Site Request Forgery (CSRF) middleware.
 // See: https://en.wikipedia.org/wiki/Cross-site_request_forgery
-func CSRF() echo.MiddlewareFunc {
+func MiddlewareCSRF() echo.MiddlewareFunc {
 	c := DefaultCSRFConfig
-	return CSRFWithConfig(c)
+	return MiddlewareCSRFWithConfig(c)
 }
 
 // CSRFWithConfig returns a CSRF middleware with config.
 // See `CSRF()`.
-func CSRFWithConfig(config CSRFConfig) echo.MiddlewareFunc {
+func MiddlewareCSRFWithConfig(config CSRFConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultCSRFConfig.Skipper

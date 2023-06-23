@@ -52,15 +52,15 @@ var (
 // For valid key it calls the next handler.
 // For invalid key, it sends "401 - Unauthorized" response.
 // For missing key, it sends "400 - Bad Request" response.
-func KeyAuth(fn KeyAuthValidator) echo.MiddlewareFunc {
+func MiddlewareKeyAuth(fn KeyAuthValidator) echo.MiddlewareFunc {
 	c := DefaultKeyAuthConfig
 	c.Validator = fn
-	return KeyAuthWithConfig(c)
+	return MiddlewareKeyAuthWithConfig(c)
 }
 
 // KeyAuthWithConfig returns an KeyAuth middleware with config.
 // See `KeyAuth()`.
-func KeyAuthWithConfig(config KeyAuthConfig) echo.MiddlewareFunc {
+func MiddlewareKeyAuthWithConfig(config KeyAuthConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultKeyAuthConfig.Skipper

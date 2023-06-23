@@ -29,13 +29,13 @@ var (
 // trailing slash to the request `URL#Path`.
 //
 // Usage `Echo#Pre(AddTrailingSlash())`
-func AddTrailingSlash() echo.MiddlewareFunc {
-	return AddTrailingSlashWithConfig(DefaultTrailingSlashConfig)
+func MiddlewareAddTrailingSlash() echo.MiddlewareFunc {
+	return MiddlewareAddTrailingSlashWithConfig(DefaultTrailingSlashConfig)
 }
 
 // AddTrailingSlashWithConfig returns a AddTrailingSlash middleware with config.
 // See `AddTrailingSlash()`.
-func AddTrailingSlashWithConfig(config TrailingSlashConfig) echo.MiddlewareFunc {
+func MiddlewareAddTrailingSlashWithConfig(config TrailingSlashConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultTrailingSlashConfig.Skipper
@@ -76,13 +76,13 @@ func AddTrailingSlashWithConfig(config TrailingSlashConfig) echo.MiddlewareFunc 
 // a trailing slash from the request URI.
 //
 // Usage `Echo#Pre(RemoveTrailingSlash())`
-func RemoveTrailingSlash() echo.MiddlewareFunc {
-	return RemoveTrailingSlashWithConfig(TrailingSlashConfig{})
+func MiddlewareRemoveTrailingSlash() echo.MiddlewareFunc {
+	return MiddlewareRemoveTrailingSlashWithConfig(TrailingSlashConfig{})
 }
 
 // RemoveTrailingSlashWithConfig returns a RemoveTrailingSlash middleware with config.
 // See `RemoveTrailingSlash()`.
-func RemoveTrailingSlashWithConfig(config TrailingSlashConfig) echo.MiddlewareFunc {
+func MiddlewareRemoveTrailingSlashWithConfig(config TrailingSlashConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultTrailingSlashConfig.Skipper

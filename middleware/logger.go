@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/secoba/echo"
 	"github.com/labstack/gommon/color"
+	"github.com/secoba/echo"
 	"github.com/valyala/fasttemplate"
 )
 
@@ -78,13 +78,13 @@ var (
 )
 
 // Logger returns a middleware that logs HTTP requests.
-func Logger() echo.MiddlewareFunc {
-	return LoggerWithConfig(DefaultLoggerConfig)
+func MiddlewareLogger() echo.MiddlewareFunc {
+	return MiddlewareLoggerWithConfig(DefaultLoggerConfig)
 }
 
 // LoggerWithConfig returns a Logger middleware with config.
 // See: `Logger()`.
-func LoggerWithConfig(config LoggerConfig) echo.MiddlewareFunc {
+func MiddlewareLoggerWithConfig(config LoggerConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultLoggerConfig.Skipper

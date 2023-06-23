@@ -28,20 +28,20 @@ func TestBodyLimit(t *testing.T) {
 	assert := assert.New(t)
 
 	// Based on content length (within limit)
-	if assert.NoError(BodyLimit("2M")(h)(c)) {
+	if assert.NoError(MiddlewareBodyLimit("2M")(h)(c)) {
 		assert.Equal(http.StatusOK, rec.Code)
 		assert.Equal(hw, rec.Body.Bytes())
 	}
 
 	// Based on content read (overlimit)
-	he := BodyLimit("2B")(h)(c).(*echo.HTTPError)
+	he := MiddlewareBodyLimit("2B")(h)(c).(*echo.HTTPError)
 	assert.Equal(http.StatusRequestEntityTooLarge, he.Code)
 
 	// Based on content read (within limit)
 	req = httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(hw))
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	if assert.NoError(BodyLimit("2M")(h)(c)) {
+	if assert.NoError(MiddlewareBodyLimit("2M")(h)(c)) {
 		assert.Equal(http.StatusOK, rec.Code)
 		assert.Equal("Hello, World!", rec.Body.String())
 	}
@@ -50,7 +50,7 @@ func TestBodyLimit(t *testing.T) {
 	req = httptest.NewRequest(http.MethodPost, "/", bytes.NewReader(hw))
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	he = BodyLimit("2B")(h)(c).(*echo.HTTPError)
+	he = MiddlewareBodyLimit("2B")(h)(c).(*echo.HTTPError)
 	assert.Equal(http.StatusRequestEntityTooLarge, he.Code)
 }
 

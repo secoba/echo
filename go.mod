@@ -4,16 +4,14 @@ go 1.15
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/huandu/go-clone/generic v1.4.0
 	github.com/labstack/gommon v0.3.0
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.8.3
 	github.com/valyala/fasttemplate v1.2.1
-	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
-	golang.org/x/net v0.0.0-20200822124328-c89045814202
+	golang.org/x/crypto v0.7.0
+	golang.org/x/net v0.8.0
 )
 
 require (
 	github.com/mattn/go-colorable v0.1.7 // indirect
-	golang.org/x/sys v0.0.0-20200826173525-f9321e4c35a6 // indirect
-	golang.org/x/text v0.3.3 // indirect
+	github.com/ulule/limiter/v3 v3.11.2
 )

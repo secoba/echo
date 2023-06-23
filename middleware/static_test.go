@@ -19,7 +19,7 @@ func TestStatic(t *testing.T) {
 	}
 
 	// Directory
-	h := StaticWithConfig(config)(echo.NotFoundHandler)
+	h := MiddlewareStaticWithConfig(config)(echo.NotFoundHandler)
 
 	assert := assert.New(t)
 
@@ -48,7 +48,7 @@ func TestStatic(t *testing.T) {
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
 	config.HTML5 = true
-	static := StaticWithConfig(config)
+	static := MiddlewareStaticWithConfig(config)
 	h = static(echo.NotFoundHandler)
 	if assert.NoError(h(c)) {
 		assert.Equal(http.StatusOK, rec.Code)
@@ -61,7 +61,7 @@ func TestStatic(t *testing.T) {
 	c = e.NewContext(req, rec)
 	config.Root = "../_fixture/certs"
 	config.Browse = true
-	static = StaticWithConfig(config)
+	static = MiddlewareStaticWithConfig(config)
 	h = static(echo.NotFoundHandler)
 	if assert.NoError(h(c)) {
 		assert.Equal(http.StatusOK, rec.Code)

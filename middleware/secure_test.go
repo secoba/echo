@@ -19,7 +19,7 @@ func TestSecure(t *testing.T) {
 	}
 
 	// Default
-	Secure()(h)(c)
+	MiddlewareSecure()(h)(c)
 	assert.Equal(t, "1; mode=block", rec.Header().Get(echo.HeaderXXSSProtection))
 	assert.Equal(t, "nosniff", rec.Header().Get(echo.HeaderXContentTypeOptions))
 	assert.Equal(t, "SAMEORIGIN", rec.Header().Get(echo.HeaderXFrameOptions))
@@ -31,7 +31,7 @@ func TestSecure(t *testing.T) {
 	req.Header.Set(echo.HeaderXForwardedProto, "https")
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	SecureWithConfig(SecureConfig{
+	MiddlewareSecureWithConfig(SecureConfig{
 		XSSProtection:         "",
 		ContentTypeNosniff:    "",
 		XFrameOptions:         "",
@@ -51,7 +51,7 @@ func TestSecure(t *testing.T) {
 	req.Header.Set(echo.HeaderXForwardedProto, "https")
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	SecureWithConfig(SecureConfig{
+	MiddlewareSecureWithConfig(SecureConfig{
 		XSSProtection:         "",
 		ContentTypeNosniff:    "",
 		XFrameOptions:         "",
@@ -72,7 +72,7 @@ func TestSecure(t *testing.T) {
 	req.Header.Set(echo.HeaderXForwardedProto, "https")
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	SecureWithConfig(SecureConfig{
+	MiddlewareSecureWithConfig(SecureConfig{
 		HSTSMaxAge:         3600,
 		HSTSPreloadEnabled: true,
 	})(h)(c)
@@ -82,7 +82,7 @@ func TestSecure(t *testing.T) {
 	req.Header.Set(echo.HeaderXForwardedProto, "https")
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	SecureWithConfig(SecureConfig{
+	MiddlewareSecureWithConfig(SecureConfig{
 		HSTSMaxAge:            3600,
 		HSTSPreloadEnabled:    true,
 		HSTSExcludeSubdomains: true,

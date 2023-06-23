@@ -22,7 +22,7 @@ func TestBasicAuth(t *testing.T) {
 		}
 		return false, nil
 	}
-	h := BasicAuth(f)(func(c echo.Context) error {
+	h := MiddlewareBasicAuth(f)(func(c echo.Context) error {
 		return c.String(http.StatusOK, "test")
 	})
 
@@ -33,7 +33,7 @@ func TestBasicAuth(t *testing.T) {
 	req.Header.Set(echo.HeaderAuthorization, auth)
 	assert.NoError(h(c))
 
-	h = BasicAuthWithConfig(BasicAuthConfig{
+	h = MiddlewareBasicAuthWithConfig(BasicAuthConfig{
 		Skipper:   nil,
 		Validator: f,
 		Realm:     "someRealm",

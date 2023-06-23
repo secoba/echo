@@ -5,8 +5,8 @@ import (
 	"io"
 	"sync"
 
-	"github.com/secoba/echo"
 	"github.com/labstack/gommon/bytes"
+	"github.com/secoba/echo"
 )
 
 type (
@@ -44,15 +44,15 @@ var (
 // header and actual content read, which makes it super secure.
 // Limit can be specified as `4x` or `4xB`, where x is one of the multiple from K, M,
 // G, T or P.
-func BodyLimit(limit string) echo.MiddlewareFunc {
+func MiddlewareBodyLimit(limit string) echo.MiddlewareFunc {
 	c := DefaultBodyLimitConfig
 	c.Limit = limit
-	return BodyLimitWithConfig(c)
+	return MiddlewareBodyLimitWithConfig(c)
 }
 
 // BodyLimitWithConfig returns a BodyLimit middleware with config.
 // See: `BodyLimit()`.
-func BodyLimitWithConfig(config BodyLimitConfig) echo.MiddlewareFunc {
+func MiddlewareBodyLimitWithConfig(config BodyLimitConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultBodyLimitConfig.Skipper

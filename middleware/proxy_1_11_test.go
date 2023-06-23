@@ -1,3 +1,4 @@
+//go:build go1.11
 // +build go1.11
 
 package middleware
@@ -40,7 +41,7 @@ func TestProxy_1_11(t *testing.T) {
 
 	// Random
 	e := echo.New()
-	e.Use(Proxy(rb))
+	e.Use(MiddlewareProxy(rb))
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
 

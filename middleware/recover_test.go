@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/secoba/echo"
 	"github.com/labstack/gommon/log"
+	"github.com/secoba/echo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,7 +19,7 @@ func TestRecover(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	h := Recover()(echo.HandlerFunc(func(c echo.Context) error {
+	h := MiddlewareRecover()(echo.HandlerFunc(func(c echo.Context) error {
 		panic("test")
 	}))
 	h(c)
@@ -63,7 +63,7 @@ func TestRecoverWithConfig_LogLevel(t *testing.T) {
 
 			config := DefaultRecoverConfig
 			config.LogLevel = tt.logLevel
-			h := RecoverWithConfig(config)(echo.HandlerFunc(func(c echo.Context) error {
+			h := MiddlewareRecoverWithConfig(config)(echo.HandlerFunc(func(c echo.Context) error {
 				panic("test")
 			}))
 

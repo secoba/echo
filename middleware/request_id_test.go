@@ -18,13 +18,13 @@ func TestRequestID(t *testing.T) {
 		return c.String(http.StatusOK, "test")
 	}
 
-	rid := RequestIDWithConfig(RequestIDConfig{})
+	rid := MiddlewareRequestIDWithConfig(RequestIDConfig{})
 	h := rid(handler)
 	h(c)
 	assert.Len(t, rec.Header().Get(echo.HeaderXRequestID), 32)
 
 	// Custom generator
-	rid = RequestIDWithConfig(RequestIDConfig{
+	rid = MiddlewareRequestIDWithConfig(RequestIDConfig{
 		Generator: func() string { return "customGenerator" },
 	})
 	h = rid(handler)

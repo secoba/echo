@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"github.com/secoba/echo"
 	"github.com/labstack/gommon/random"
+	"github.com/secoba/echo"
 )
 
 type (
@@ -26,12 +26,12 @@ var (
 )
 
 // RequestID returns a X-Request-ID middleware.
-func RequestID() echo.MiddlewareFunc {
-	return RequestIDWithConfig(DefaultRequestIDConfig)
+func MiddlewareRequestID() echo.MiddlewareFunc {
+	return MiddlewareRequestIDWithConfig(DefaultRequestIDConfig)
 }
 
 // RequestIDWithConfig returns a X-Request-ID middleware with config.
-func RequestIDWithConfig(config RequestIDConfig) echo.MiddlewareFunc {
+func MiddlewareRequestIDWithConfig(config RequestIDConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultRequestIDConfig.Skipper

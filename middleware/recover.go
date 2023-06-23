@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/secoba/echo"
 	"github.com/labstack/gommon/log"
+	"github.com/secoba/echo"
 )
 
 type (
@@ -46,13 +46,13 @@ var (
 
 // Recover returns a middleware which recovers from panics anywhere in the chain
 // and handles the control to the centralized HTTPErrorHandler.
-func Recover() echo.MiddlewareFunc {
-	return RecoverWithConfig(DefaultRecoverConfig)
+func MiddlewareRecover() echo.MiddlewareFunc {
+	return MiddlewareRecoverWithConfig(DefaultRecoverConfig)
 }
 
 // RecoverWithConfig returns a Recover middleware with config.
 // See: `Recover()`.
-func RecoverWithConfig(config RecoverConfig) echo.MiddlewareFunc {
+func MiddlewareRecoverWithConfig(config RecoverConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultRecoverConfig.Skipper

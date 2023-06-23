@@ -21,7 +21,7 @@ func TestKeyAuth(t *testing.T) {
 			return key == "valid-key", nil
 		},
 	}
-	h := KeyAuthWithConfig(config)(func(c echo.Context) error {
+	h := MiddlewareKeyAuthWithConfig(config)(func(c echo.Context) error {
 		return c.String(http.StatusOK, "test")
 	})
 
@@ -45,7 +45,7 @@ func TestKeyAuth(t *testing.T) {
 
 	// Key from custom header
 	config.KeyLookup = "header:API-Key"
-	h = KeyAuthWithConfig(config)(func(c echo.Context) error {
+	h = MiddlewareKeyAuthWithConfig(config)(func(c echo.Context) error {
 		return c.String(http.StatusOK, "test")
 	})
 	req.Header.Set("API-Key", "valid-key")
@@ -53,7 +53,7 @@ func TestKeyAuth(t *testing.T) {
 
 	// Key from query string
 	config.KeyLookup = "query:key"
-	h = KeyAuthWithConfig(config)(func(c echo.Context) error {
+	h = MiddlewareKeyAuthWithConfig(config)(func(c echo.Context) error {
 		return c.String(http.StatusOK, "test")
 	})
 	q := req.URL.Query()
@@ -63,7 +63,7 @@ func TestKeyAuth(t *testing.T) {
 
 	// Key from form
 	config.KeyLookup = "form:key"
-	h = KeyAuthWithConfig(config)(func(c echo.Context) error {
+	h = MiddlewareKeyAuthWithConfig(config)(func(c echo.Context) error {
 		return c.String(http.StatusOK, "test")
 	})
 	f := make(url.Values)

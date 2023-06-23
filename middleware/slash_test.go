@@ -15,7 +15,7 @@ func TestAddTrailingSlash(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/add-slash", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	h := AddTrailingSlash()(func(c echo.Context) error {
+	h := MiddlewareAddTrailingSlash()(func(c echo.Context) error {
 		return nil
 	})
 	is.NoError(h(c))
@@ -26,7 +26,7 @@ func TestAddTrailingSlash(t *testing.T) {
 	req = httptest.NewRequest(http.MethodConnect, "", nil)
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	h = AddTrailingSlash()(func(c echo.Context) error {
+	h = MiddlewareAddTrailingSlash()(func(c echo.Context) error {
 		return nil
 	})
 	is.NoError(h(c))
@@ -37,7 +37,7 @@ func TestAddTrailingSlash(t *testing.T) {
 	req = httptest.NewRequest(http.MethodGet, "/add-slash?key=value", nil)
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	h = AddTrailingSlashWithConfig(TrailingSlashConfig{
+	h = MiddlewareAddTrailingSlashWithConfig(TrailingSlashConfig{
 		RedirectCode: http.StatusMovedPermanently,
 	})(func(c echo.Context) error {
 		return nil
@@ -53,7 +53,7 @@ func TestRemoveTrailingSlash(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/remove-slash/", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	h := RemoveTrailingSlash()(func(c echo.Context) error {
+	h := MiddlewareRemoveTrailingSlash()(func(c echo.Context) error {
 		return nil
 	})
 	is.NoError(h(c))
@@ -64,7 +64,7 @@ func TestRemoveTrailingSlash(t *testing.T) {
 	req = httptest.NewRequest(http.MethodConnect, "", nil)
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	h = RemoveTrailingSlash()(func(c echo.Context) error {
+	h = MiddlewareRemoveTrailingSlash()(func(c echo.Context) error {
 		return nil
 	})
 	is.NoError(h(c))
@@ -75,7 +75,7 @@ func TestRemoveTrailingSlash(t *testing.T) {
 	req = httptest.NewRequest(http.MethodGet, "/remove-slash/?key=value", nil)
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	h = RemoveTrailingSlashWithConfig(TrailingSlashConfig{
+	h = MiddlewareRemoveTrailingSlashWithConfig(TrailingSlashConfig{
 		RedirectCode: http.StatusMovedPermanently,
 	})(func(c echo.Context) error {
 		return nil
@@ -88,7 +88,7 @@ func TestRemoveTrailingSlash(t *testing.T) {
 	req = httptest.NewRequest(http.MethodGet, "http://localhost", nil)
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
-	h = RemoveTrailingSlash()(func(c echo.Context) error {
+	h = MiddlewareRemoveTrailingSlash()(func(c echo.Context) error {
 		return nil
 	})
 	is.NoError(h(c))

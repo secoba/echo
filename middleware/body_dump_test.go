@@ -28,7 +28,7 @@ func TestBodyDump(t *testing.T) {
 
 	requestBody := ""
 	responseBody := ""
-	mw := BodyDump(func(c echo.Context, reqBody, resBody []byte) {
+	mw := MiddlewareBodyDump(func(c echo.Context, reqBody, resBody []byte) {
 		requestBody = string(reqBody)
 		responseBody = string(resBody)
 	})
@@ -43,7 +43,7 @@ func TestBodyDump(t *testing.T) {
 	}
 
 	// Must set default skipper
-	BodyDumpWithConfig(BodyDumpConfig{
+	MiddlewareBodyDumpWithConfig(BodyDumpConfig{
 		Skipper: nil,
 		Handler: func(c echo.Context, reqBody, resBody []byte) {
 			requestBody = string(reqBody)
@@ -62,21 +62,21 @@ func TestBodyDumpFails(t *testing.T) {
 		return errors.New("some error")
 	}
 
-	mw := BodyDump(func(c echo.Context, reqBody, resBody []byte) {})
+	mw := MiddlewareBodyDump(func(c echo.Context, reqBody, resBody []byte) {})
 
 	if !assert.Error(t, mw(h)(c)) {
 		t.FailNow()
 	}
 
 	assert.Panics(t, func() {
-		mw = BodyDumpWithConfig(BodyDumpConfig{
+		mw = MiddlewareBodyDumpWithConfig(BodyDumpConfig{
 			Skipper: nil,
 			Handler: nil,
 		})
 	})
 
 	assert.NotPanics(t, func() {
-		mw = BodyDumpWithConfig(BodyDumpConfig{
+		mw = MiddlewareBodyDumpWithConfig(BodyDumpConfig{
 			Skipper: func(c echo.Context) bool {
 				return true
 			},

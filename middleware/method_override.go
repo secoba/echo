@@ -34,13 +34,13 @@ var (
 // uses it instead of the original method.
 //
 // For security reasons, only `POST` method can be overridden.
-func MethodOverride() echo.MiddlewareFunc {
-	return MethodOverrideWithConfig(DefaultMethodOverrideConfig)
+func MiddlewareMethodOverride() echo.MiddlewareFunc {
+	return MiddlewareMethodOverrideWithConfig(DefaultMethodOverrideConfig)
 }
 
 // MethodOverrideWithConfig returns a MethodOverride middleware with config.
 // See: `MethodOverride()`.
-func MethodOverrideWithConfig(config MethodOverrideConfig) echo.MiddlewareFunc {
+func MiddlewareMethodOverrideWithConfig(config MethodOverrideConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultMethodOverrideConfig.Skipper

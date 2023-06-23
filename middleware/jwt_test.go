@@ -31,7 +31,7 @@ func TestJWTRace(t *testing.T) {
 	raceToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlJhY2UgQ29uZGl0aW9uIiwiYWRtaW4iOmZhbHNlfQ.Xzkx9mcgGqYMTkuxSCbJ67lsDyk5J2aB7hu65cEE-Ss"
 	validKey := []byte("secret")
 
-	h := JWTWithConfig(JWTConfig{
+	h := MiddlewareJWTWithConfig(JWTConfig{
 		Claims:     &jwtCustomClaims{},
 		SigningKey: validKey,
 	})(handler)
@@ -210,19 +210,19 @@ func TestJWT(t *testing.T) {
 
 		if tc.expPanic {
 			assert.Panics(t, func() {
-				JWTWithConfig(tc.config)
+				MiddlewareJWTWithConfig(tc.config)
 			}, tc.info)
 			continue
 		}
 
 		if tc.expErrCode != 0 {
-			h := JWTWithConfig(tc.config)(handler)
+			h := MiddlewareJWTWithConfig(tc.config)(handler)
 			he := h(c).(*echo.HTTPError)
 			assert.Equal(t, tc.expErrCode, he.Code, tc.info)
 			continue
 		}
 
-		h := JWTWithConfig(tc.config)(handler)
+		h := MiddlewareJWTWithConfig(tc.config)(handler)
 		if assert.NoError(t, h(c), tc.info) {
 			user := c.Get("user").(*jwt.Token)
 			switch claims := user.Claims.(type) {
@@ -306,13 +306,13 @@ func TestJWTwithKID(t *testing.T) {
 		c := e.NewContext(req, res)
 
 		if tc.expErrCode != 0 {
-			h := JWTWithConfig(tc.config)(handler)
+			h := MiddlewareJWTWithConfig(tc.config)(handler)
 			he := h(c).(*echo.HTTPError)
 			test.Equal(tc.expErrCode, he.Code, tc.info)
 			continue
 		}
 
-		h := JWTWithConfig(tc.config)(handler)
+		h := MiddlewareJWTWithConfig(tc.config)(handler)
 		if test.NoError(h(c), tc.info) {
 			user := c.Get("user").(*jwt.Token)
 			switch claims := user.Claims.(type) {

@@ -40,19 +40,19 @@ var (
 	}
 )
 
-// BasicAuth returns an BasicAuth middleware.
+// MiddlewareBasicAuth returns an BasicAuth middleware.
 //
 // For valid credentials it calls the next handler.
 // For missing or invalid credentials, it sends "401 - Unauthorized" response.
-func BasicAuth(fn BasicAuthValidator) echo.MiddlewareFunc {
+func MiddlewareBasicAuth(fn BasicAuthValidator) echo.MiddlewareFunc {
 	c := DefaultBasicAuthConfig
 	c.Validator = fn
-	return BasicAuthWithConfig(c)
+	return MiddlewareBasicAuthWithConfig(c)
 }
 
-// BasicAuthWithConfig returns an BasicAuth middleware with config.
+// MiddlewareBasicAuthWithConfig returns an BasicAuth middleware with config.
 // See `BasicAuth()`.
-func BasicAuthWithConfig(config BasicAuthConfig) echo.MiddlewareFunc {
+func MiddlewareBasicAuthWithConfig(config BasicAuthConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Validator == nil {
 		panic("echo: basic-auth middleware requires a validator function")

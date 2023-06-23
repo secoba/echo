@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/secoba/echo"
 	"github.com/labstack/gommon/random"
+	"github.com/secoba/echo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +17,7 @@ func TestCSRF(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	csrf := CSRFWithConfig(CSRFConfig{
+	csrf := MiddlewareCSRFWithConfig(CSRFConfig{
 		TokenLength: 16,
 	})
 	h := csrf(func(c echo.Context) error {

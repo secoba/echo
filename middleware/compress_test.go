@@ -20,7 +20,7 @@ func TestGzip(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	// Skip if no Accept-Encoding header
-	h := Gzip()(func(c echo.Context) error {
+	h := MiddlewareGzip()(func(c echo.Context) error {
 		c.Response().Write([]byte("test")) // For Content-Type sniffing
 		return nil
 	})
@@ -54,7 +54,7 @@ func TestGzip(t *testing.T) {
 	rec = httptest.NewRecorder()
 
 	c = e.NewContext(req, rec)
-	Gzip()(func(c echo.Context) error {
+	MiddlewareGzip()(func(c echo.Context) error {
 		c.Response().Header().Set("Content-Type", "text/event-stream")
 		c.Response().Header().Set("Transfer-Encoding", "chunked")
 
@@ -96,7 +96,7 @@ func TestGzipNoContent(t *testing.T) {
 	req.Header.Set(echo.HeaderAcceptEncoding, gzipScheme)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	h := Gzip()(func(c echo.Context) error {
+	h := MiddlewareGzip()(func(c echo.Context) error {
 		return c.NoContent(http.StatusNoContent)
 	})
 	if assert.NoError(t, h(c)) {
@@ -108,7 +108,7 @@ func TestGzipNoContent(t *testing.T) {
 
 func TestGzipErrorReturned(t *testing.T) {
 	e := echo.New()
-	e.Use(Gzip())
+	e.Use(MiddlewareGzip())
 	e.GET("/", "test gzip", func(c echo.Context) error {
 		return echo.ErrNotFound
 	})
@@ -123,7 +123,7 @@ func TestGzipErrorReturned(t *testing.T) {
 // Issue #806
 func TestGzipWithStatic(t *testing.T) {
 	e := echo.New()
-	e.Use(Gzip())
+	e.Use(MiddlewareGzip())
 	e.Static("/test", "../_fixture/images", "test gzip")
 	req := httptest.NewRequest(http.MethodGet, "/test/walle.png", nil)
 	req.Header.Set(echo.HeaderAcceptEncoding, gzipScheme)

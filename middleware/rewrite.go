@@ -38,15 +38,15 @@ var (
 // Rewrite returns a Rewrite middleware.
 //
 // Rewrite middleware rewrites the URL path based on the provided rules.
-func Rewrite(rules map[string]string) echo.MiddlewareFunc {
+func MiddlewareRewrite(rules map[string]string) echo.MiddlewareFunc {
 	c := DefaultRewriteConfig
 	c.Rules = rules
-	return RewriteWithConfig(c)
+	return MiddlewareRewriteWithConfig(c)
 }
 
 // RewriteWithConfig returns a Rewrite middleware with config.
 // See: `Rewrite()`.
-func RewriteWithConfig(config RewriteConfig) echo.MiddlewareFunc {
+func MiddlewareRewriteWithConfig(config RewriteConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Rules == nil {
 		panic("echo: rewrite middleware requires url path rewrite rules")

@@ -89,13 +89,13 @@ var (
 // Secure middleware provides protection against cross-site scripting (XSS) attack,
 // content type sniffing, clickjacking, insecure connection and other code injection
 // attacks.
-func Secure() echo.MiddlewareFunc {
-	return SecureWithConfig(DefaultSecureConfig)
+func MiddlewareSecure() echo.MiddlewareFunc {
+	return MiddlewareSecureWithConfig(DefaultSecureConfig)
 }
 
 // SecureWithConfig returns a Secure middleware with config.
 // See: `Secure()`.
-func SecureWithConfig(config SecureConfig) echo.MiddlewareFunc {
+func MiddlewareSecureWithConfig(config SecureConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultSecureConfig.Skipper

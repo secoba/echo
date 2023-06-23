@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/secoba/echo"
 	"github.com/labstack/gommon/bytes"
+	"github.com/secoba/echo"
 )
 
 type (
@@ -121,15 +121,15 @@ var (
 
 // Static returns a Static middleware to serves static content from the provided
 // root directory.
-func Static(root string) echo.MiddlewareFunc {
+func MiddlewareStatic(root string) echo.MiddlewareFunc {
 	c := DefaultStaticConfig
 	c.Root = root
-	return StaticWithConfig(c)
+	return MiddlewareStaticWithConfig(c)
 }
 
 // StaticWithConfig returns a Static middleware with config.
 // See `Static()`.
-func StaticWithConfig(config StaticConfig) echo.MiddlewareFunc {
+func MiddlewareStaticWithConfig(config StaticConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Root == "" {
 		config.Root = "." // For security we want to restrict to CWD.

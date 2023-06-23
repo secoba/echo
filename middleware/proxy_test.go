@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-//Assert expected with url.EscapedPath method to obtain the path.
+// Assert expected with url.EscapedPath method to obtain the path.
 func TestProxy(t *testing.T) {
 	// Setup
 	t1 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +51,7 @@ func TestProxy(t *testing.T) {
 
 	// Random
 	e := echo.New()
-	e.Use(Proxy(rb))
+	e.Use(MiddlewareProxy(rb))
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
 	e.ServeHTTP(rec, req)
@@ -73,7 +73,7 @@ func TestProxy(t *testing.T) {
 	// Round-robin
 	rrb := NewRoundRobinBalancer(targets)
 	e = echo.New()
-	e.Use(Proxy(rrb))
+	e.Use(MiddlewareProxy(rrb))
 	rec = httptest.NewRecorder()
 	e.ServeHTTP(rec, req)
 	body = rec.Body.String()
@@ -85,7 +85,7 @@ func TestProxy(t *testing.T) {
 
 	// Rewrite
 	e = echo.New()
-	e.Use(ProxyWithConfig(ProxyConfig{
+	e.Use(MiddlewareProxyWithConfig(ProxyConfig{
 		Balancer: rrb,
 		Rewrite: map[string]string{
 			"/old":              "/new",
@@ -119,14 +119,14 @@ func TestProxy(t *testing.T) {
 	e.ServeHTTP(rec, req)
 	assert.Equal(t, "/user/jill/order/T%2FcO4lW%2Ft%2FVp%2F", req.URL.EscapedPath())
 	assert.Equal(t, http.StatusOK, rec.Code)
-	req.URL.Path =  "/users/jill/orders/%%%%"
+	req.URL.Path = "/users/jill/orders/%%%%"
 	rec = httptest.NewRecorder()
 	e.ServeHTTP(rec, req)
 	assert.Equal(t, http.StatusBadRequest, rec.Code)
 
 	// ModifyResponse
 	e = echo.New()
-	e.Use(ProxyWithConfig(ProxyConfig{
+	e.Use(MiddlewareProxyWithConfig(ProxyConfig{
 		Balancer: rrb,
 		ModifyResponse: func(res *http.Response) error {
 			res.Body = ioutil.NopCloser(bytes.NewBuffer([]byte("modified")))
@@ -150,7 +150,7 @@ func TestProxy(t *testing.T) {
 	rrb1 := NewRoundRobinBalancer(targets)
 	e = echo.New()
 	e.Use(contextObserver)
-	e.Use(Proxy(rrb1))
+	e.Use(MiddlewareProxy(rrb1))
 	rec = httptest.NewRecorder()
 	e.ServeHTTP(rec, req)
 }
@@ -162,7 +162,7 @@ func TestProxyRealIPHeader(t *testing.T) {
 	url, _ := url.Parse(upstream.URL)
 	rrb := NewRoundRobinBalancer([]*ProxyTarget{{Name: "upstream", URL: url}})
 	e := echo.New()
-	e.Use(Proxy(rrb))
+	e.Use(MiddlewareProxy(rrb))
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
 

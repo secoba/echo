@@ -190,15 +190,15 @@ func (b *roundRobinBalancer) Next(c echo.Context) *ProxyTarget {
 // Proxy returns a Proxy middleware.
 //
 // Proxy middleware forwards the request to upstream server using a configured load balancing technique.
-func Proxy(balancer ProxyBalancer) echo.MiddlewareFunc {
+func MiddlewareProxy(balancer ProxyBalancer) echo.MiddlewareFunc {
 	c := DefaultProxyConfig
 	c.Balancer = balancer
-	return ProxyWithConfig(c)
+	return MiddlewareProxyWithConfig(c)
 }
 
 // ProxyWithConfig returns a Proxy middleware with config.
 // See: `Proxy()`
-func ProxyWithConfig(config ProxyConfig) echo.MiddlewareFunc {
+func MiddlewareProxyWithConfig(config ProxyConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
 		config.Skipper = DefaultProxyConfig.Skipper

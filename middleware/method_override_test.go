@@ -12,7 +12,7 @@ import (
 
 func TestMethodOverride(t *testing.T) {
 	e := echo.New()
-	m := MethodOverride()
+	m := MiddlewareMethodOverride()
 	h := func(c echo.Context) error {
 		return c.String(http.StatusOK, "test")
 	}
@@ -26,7 +26,7 @@ func TestMethodOverride(t *testing.T) {
 	assert.Equal(t, http.MethodDelete, req.Method)
 
 	// Override with form parameter
-	m = MethodOverrideWithConfig(MethodOverrideConfig{Getter: MethodFromForm("_method")})
+	m = MiddlewareMethodOverrideWithConfig(MethodOverrideConfig{Getter: MethodFromForm("_method")})
 	req = httptest.NewRequest(http.MethodPost, "/", bytes.NewReader([]byte("_method="+http.MethodDelete)))
 	rec = httptest.NewRecorder()
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
@@ -35,7 +35,7 @@ func TestMethodOverride(t *testing.T) {
 	assert.Equal(t, http.MethodDelete, req.Method)
 
 	// Override with query parameter
-	m = MethodOverrideWithConfig(MethodOverrideConfig{Getter: MethodFromQuery("_method")})
+	m = MiddlewareMethodOverrideWithConfig(MethodOverrideConfig{Getter: MethodFromQuery("_method")})
 	req = httptest.NewRequest(http.MethodPost, "/?_method="+http.MethodDelete, nil)
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
