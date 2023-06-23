@@ -27,12 +27,12 @@ var (
 	}
 )
 
-func AllowRemoteMiddleware() echo.MiddlewareFunc {
+func MiddlewareAllowRemote() echo.MiddlewareFunc {
 	c := DefaultAllowRemoteConfig
-	return AllowRemoteMiddlewareWithConfig(c)
+	return MiddlewareAllowRemoteWithConfig(c)
 }
 
-func AllowRemoteMiddlewareWithConfig(config AllowRemoteConfig) echo.MiddlewareFunc {
+func MiddlewareAllowRemoteWithConfig(config AllowRemoteConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) (err error) {
 			remote := c.RealIP()

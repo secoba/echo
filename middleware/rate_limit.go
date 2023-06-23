@@ -36,13 +36,13 @@ var (
 	}
 )
 
-func RateLimitMiddleware() echo.MiddlewareFunc {
+func MiddlewareRateLimit() echo.MiddlewareFunc {
 	c := DefaultRateLimitConfig
-	return RateLimitMiddlewareWithConfig(c)
+	return MiddlewareRateLimitWithConfig(c)
 }
 
-// RateLimitMiddlewareWithConfig https://github.com/ulule/limiter-examples
-func RateLimitMiddlewareWithConfig(config RateLimitConfig) echo.MiddlewareFunc {
+// MiddlewareRateLimitWithConfig https://github.com/ulule/limiter-examples
+func MiddlewareRateLimitWithConfig(config RateLimitConfig) echo.MiddlewareFunc {
 	// -------- no limit
 	if config.Limit < 1 {
 		return func(next echo.HandlerFunc) echo.HandlerFunc {
