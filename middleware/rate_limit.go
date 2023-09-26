@@ -10,7 +10,6 @@
 package middleware
 
 import (
-	"net/http"
 	"strconv"
 	"time"
 
@@ -26,13 +25,17 @@ var (
 
 type (
 	RateLimitConfig struct {
-		Limit int64
+		Limit      int64
+		StatusCode int
+		StatusMsg  string
 	}
 )
 
 var (
 	DefaultRateLimitConfig = RateLimitConfig{
-		Limit: 0,
+		Limit:      0,
+		StatusCode: 403,
+		StatusMsg:  "access too fast",
 	}
 )
 
@@ -68,7 +71,7 @@ func MiddlewareRateLimitWithConfig(config RateLimitConfig) echo.MiddlewareFunc {
 			limiterCtx, err := ipRateLimiter.Get(c.Request().Context(), ip)
 			if err != nil {
 				//log(fmt.Sprintf("IPRateLimit - ipRateLimiter.Get - err: %v, %s on %s", err, ip, c.Request().URL), nil)
-				return echo.NewHTTPError(http.StatusForbidden, "access too fast")
+				return echo.NewHTTPError(config.StatusCode, config.StatusMsg)
 			}
 
 			h := c.Response().Header()
@@ -78,7 +81,7 @@ func MiddlewareRateLimitWithConfig(config RateLimitConfig) echo.MiddlewareFunc {
 
 			if limiterCtx.Reached {
 				// logger.LogErr(fmt.Sprintf("Too Many Requests from %s on %s", ip, c.Request().URL))
-				return echo.NewHTTPError(http.StatusForbidden, "access too fast")
+				return echo.NewHTTPError(config.StatusCode, config.StatusMsg)
 			}
 			return next(c)
 		}

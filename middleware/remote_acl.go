@@ -10,20 +10,22 @@
 package middleware
 
 import (
-	"net/http"
-
 	"github.com/secoba/echo"
 )
 
 type (
 	AllowRemoteConfig struct {
-		Address map[string]bool
+		Address    map[string]bool
+		StatusCode int
+		StatusMsg  string
 	}
 )
 
 var (
 	DefaultAllowRemoteConfig = AllowRemoteConfig{
-		Address: map[string]bool{},
+		Address:    map[string]bool{},
+		StatusCode: 403,
+		StatusMsg:  "cannot access",
 	}
 )
 
@@ -40,7 +42,7 @@ func MiddlewareAllowRemoteWithConfig(config AllowRemoteConfig) echo.MiddlewareFu
 				if _, ok := config.Address[remote]; ok {
 					return next(c)
 				}
-				return echo.NewHTTPError(http.StatusForbidden, "cannot access")
+				return echo.NewHTTPError(config.StatusCode, config.StatusMsg)
 			} else {
 				return next(c)
 			}

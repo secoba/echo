@@ -10,20 +10,22 @@
 package middleware
 
 import (
-	"net/http"
-
 	"github.com/secoba/echo"
 )
 
 type (
 	VHostConfig struct {
-		HostName map[string]bool
+		HostName   map[string]bool
+		StatusCode int
+		Msg        string
 	}
 )
 
 var (
 	DefaultVHostConfig = VHostConfig{
-		HostName: map[string]bool{},
+		HostName:   map[string]bool{},
+		StatusCode: 403,
+		Msg:        "cannot access",
 	}
 )
 
@@ -40,7 +42,7 @@ func MiddlewareVHostWithConfig(config VHostConfig) echo.MiddlewareFunc {
 				if _, ok := config.HostName[hostname]; ok {
 					return next(c)
 				}
-				return echo.NewHTTPError(http.StatusForbidden, "cannot access")
+				return echo.NewHTTPError(config.StatusCode, config.Msg)
 			} else {
 				return next(c)
 			}
