@@ -11,6 +11,7 @@ package middleware
 
 import (
 	"github.com/secoba/echo"
+	"strings"
 )
 
 type (
@@ -37,7 +38,7 @@ func MiddlewareVHost() echo.MiddlewareFunc {
 func MiddlewareVHostWithConfig(config VHostConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) (err error) {
-			hostname := c.Request().Host
+			hostname := strings.SplitN(c.Request().Host, ":", 2)[0]
 			if config.HostName != nil && len(config.HostName) > 0 {
 				if _, ok := config.HostName[hostname]; ok {
 					return next(c)
